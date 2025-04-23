@@ -31,6 +31,11 @@ const skills = [
 const happy = true;
 const finished = false;
 const goal = 7;
+
+
+const skillColor = "green";
+const textCase = "uppercase";
+const fontWeight = "bold";
 ---
 
 <html lang="en">
@@ -42,6 +47,19 @@ const goal = 7;
 		
 		<title>{pageTitle}</title>
 		
+		<style define:vars={{skillColor, fontWeight, textCase}}>
+			h1 {
+			  color: purple;
+			  font-size: 4rem;
+			}
+			.skill {
+				color:	var(--skillColor);
+				font-weight: var(--fontWeight);
+				text-transform: var(--textCase);
+			}
+		  </style>
+		
+		
 		<link href="https://fonts.cdnfonts.com/css/runstop-restore" rel="stylesheet">
                 
 	</head>
@@ -50,6 +68,8 @@ const goal = 7;
 		<a href="/about/">Sobre mi </a>
 		<a href="/blog/">Blog</a>
 		<h1>{pageTitle}</h1>
+
+
 
         <h2>.... !Y mi nuevo sitio Astro!    </h2>
 
@@ -67,7 +87,7 @@ const goal = 7;
 		</ul>
 		<p>Mis habilidades en lo que es la programacion son:</p>
 		<ul>
-			{skills.map((skill) => <li>{skill.name} {skill.percent}%</li>)}
+			{skills.map((skill) => <li class="skill">{skill.name} {skill.percent}%</li>)}
 			
 			
 		</ul>
