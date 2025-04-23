@@ -1,5 +1,36 @@
 ---
+import { literal } from "astro:schema";
 
+const pageTitle = "Sobre mi"
+
+const identity = {
+	firsname: "Sebastian",
+	country: "Chile",
+	hobbies : ["Ver peliculas", "La musica(friki)", "De vez cuando juego algun juego","Me gusta sacar fotos!!"],
+};
+
+const skills = [
+	{
+		name: "HTML",
+		percent: 90,
+	},
+	{
+		name: "python",
+		percent: 30,
+	},
+	{
+		name: "JavaScript",
+		percent: 10,
+	},
+	{
+		name: "Astro",
+		percent: 10,
+	}
+];
+
+const happy = true;
+const finished = false;
+const goal = 7;
 ---
 
 <html lang="en">
@@ -8,7 +39,9 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		
+		<title>{pageTitle}</title>
+		
 		<link href="https://fonts.cdnfonts.com/css/runstop-restore" rel="stylesheet">
                 
 	</head>
@@ -16,11 +49,31 @@
 		<a href="/">Inicio</a>
 		<a href="/about/">Sobre mi </a>
 		<a href="/blog/">Blog</a>
-		<h1>Sobre mi</h1>
+		<h1>{pageTitle}</h1>
 
         <h2>.... !Y mi nuevo sitio Astro!    </h2>
 
 		<p>Estoy trabajando en un blog siguiendo el tutorial de la pagina de astro </p>
 		<p>Este sitio se ira actualizando a medida que vaya completando parte del tutorial!</p>
+
+		<p>He aqui algunos datos sobre mi:</p>
+
+		<ul>
+			<li>Me llamo {identity.firsname}.</li>
+			<li>Vivo en {identity.country}</li>
+			{identity.hobbies.length >= 2 &&
+				<li>Dos mis cosas favoritas en el mundo sooon!: {identity.hobbies[0]} <b>yyyy</b> {identity.hobbies[1]}</li>}
+				<li>Y {identity.hobbies[2]} o {identity.hobbies[3]}</li>			
+		</ul>
+		<p>Mis habilidades en lo que es la programacion son:</p>
+		<ul>
+			{skills.map((skill) => <li>{skill.name} {skill.percent}%</li>)}
+			
+			
+		</ul>
+
+		{happy && <p>sii!</p>}
+		{finished && <p>He terminado este tutorial</p>}
+		{goal === 7 ? <p>Mi objetivo es terminar en una semana</p> : <p>Mi objetivo no son 7 dias</p>}
 	</body>
 </html>
