@@ -1,0 +1,143 @@
+---
+const songs = [
+  {
+    title: "Smokestack Lightnin'",
+    artist: "Howlin' Wolf",
+    src: "/songs/song2.mp3",
+    cover: "/images/port1.png",
+  },
+ 
+];
+---
+
+<style>
+  .player {
+    max-width: 400px;
+    margin: auto;
+    text-align: center;
+    font-family: sans-serif;
+  }
+
+  img {
+    width: 100%;
+    border-radius: 1rem;
+  }
+
+  button {
+    margin: 1rem;
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+  .progress {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    button {
+      font-size: 1rem;
+      padding: 0.5rem;
+    }
+  }
+</style>
+
+<div class="player">
+  <img id="cover" src={songs[0].cover} alt="Album cover" />
+  <h2 id="title">{songs[0].title}</h2>
+  <h3 id="artist">{songs[0].artist}</h3>
+
+  <audio id="audio" src={songs[0].src}></audio>
+
+  <div>
+    <button id="prev">⏮️</button>
+    <button id="play-pause">⏯️</button>
+    <button id="next">⏭️</button>
+  </div>
+
+  <input class="progress" type="range" id="progress" value="0" />
+</div>
+
+<script type="module">
+  document.addEventListener("DOMContentLoaded", () => {
+    const songs = [
+      {
+        title: "Smokestack Lightnin'",
+        artist: "Howlin' Wolf",
+        src: "/songs/song2.mp3",
+        cover: "/images/port1.png",
+      },
+      {
+        title: "Sesion 1",
+        artist: "Unknown Artist",
+        src: "/songs/song3.mp3",
+        cover: "/images/port1.png",
+      },
+    ];
+
+    let index = 0;
+
+    const audio = document.getElementById("audio");
+    const title = document.getElementById("title");
+    const artist = document.getElementById("artist");
+    const cover = document.getElementById("cover");
+    const progress = document.getElementById("progress");
+    const playPauseButton = document.getElementById("play-pause");
+    const prevButton = document.getElementById("prev");
+    const nextButton = document.getElementById("next");
+
+    function loadSong(song) {
+      title.textContent = song.title;
+      artist.textContent = song.artist;
+      audio.src = song.src;
+      cover.src = song.cover;
+    }
+
+    function togglePlayPause() {
+      if (audio.paused) {
+        audio.play();
+        playPauseButton.textContent = "⏸️";
+      } else {
+        audio.pause();
+        playPauseButton.textContent = "⏯️";
+      }
+    }
+
+    function prevSong() {
+      index = (index - 1 + songs.length) % songs.length;
+      loadSong(songs[index]);
+      audio.play();
+      playPauseButton.textContent = "⏸️";
+    }
+
+    function nextSong() {
+      index = (index + 1) % songs.length;
+      loadSong(songs[index]);
+      audio.play();
+      playPauseButton.textContent = "⏸️";
+    }
+
+    audio.addEventListener("timeupdate", () => {
+      progress.value = (audio.currentTime / audio.duration) * 100 || 0;
+    });
+
+    progress.addEventListener("input", () => {
+      audio.currentTime = (progress.value / 100) * audio.duration;
+    });
+
+    playPauseButton.addEventListener("click", togglePlayPause);
+    prevButton.addEventListener("click", prevSong);
+    nextButton.addEventListener("click", nextSong);
+
+    loadSong(songs[index]);
+  });
+</script>

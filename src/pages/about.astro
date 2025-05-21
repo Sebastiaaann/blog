@@ -1,6 +1,8 @@
 ---
 import { literal } from "astro:schema";
-
+import './styles/global.css'
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 const pageTitle = "Sobre mi"
 
 const identity = {
@@ -64,9 +66,7 @@ const fontWeight = "bold";
                 
 	</head>
 	<body>
-		<a href="/">Inicio</a>
-		<a href="/about/">Sobre mi </a>
-		<a href="/blog/">Blog</a>
+		<Header/>
 		<h1>{pageTitle}</h1>
 
 
@@ -95,5 +95,6 @@ const fontWeight = "bold";
 		{happy && <p>sii!</p>}
 		{finished && <p>He terminado este tutorial</p>}
 		{goal === 7 ? <p>Mi objetivo es terminar en una semana</p> : <p>Mi objetivo no son 7 dias</p>}
+	<Footer/>
 	</body>
 </html>
