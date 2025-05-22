@@ -1,23 +1,50 @@
 ---
-
 import Social from "./Social.astro"
 
-
+const menuItems = [
+  { text: 'Home', url: '/' },
+  { text: 'About', url: '/about' },
+  { text: 'Blog', url: '/blog' },
+  { text: 'Music', url: '/music-player' },
+  { text: 'Contact', url: '/contact' },
+];
 ---
 
-<style>
-    foooter {
-        display: flex;
-        gap: 1rem;
-        margin-top: 2rem;
-    }
-</style> 
-   
-<footer>
-    <Social platform="Twitter" username="Booo_red" />
-
-    <Social platform="GitHub" username="Sebastiaaann" />
+<footer class="fixed bottom-0 left-0 w-full bg-[#14140d]/95 backdrop-blur-sm border-t border-[#B8B3AF]/10">
+  <div class="max-w-6xl mx-auto px-6 py-4">
+    <nav class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+      <div class="text-[#B8B3AF]/80 text-sm">
+        © 2024 Your Blog
+      </div>
+      
+      <ul class="flex flex-wrap justify-center items-center gap-8">
+        {menuItems.map(item => (
+          <li>
+            <a 
+              href={item.url}
+              class="text-[#B8B3AF]/70 hover:text-[#B8B3AF] transition-colors duration-300 text-sm tracking-wider"
+            >
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
 </footer>
+
+<style>
+  footer {
+    border-top: 1px solid rgba(184, 179, 175, 0.1);
+  }
+
+  foooter {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+</style> 
+
  
        
   

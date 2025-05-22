@@ -1,0 +1,37 @@
+---
+import { Image } from 'astro:assets';
+import inicioImagen from '../assets/inicio-imagen.jpg';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={[
+  "relative",
+  "w-full",
+  "w-[100%]",
+  "h-[300%]",
+  className
+]}>
+  <Image 
+    src={inicioImagen}
+    alt="Artistic black and white photograph"
+    class="w-full h-auto object-contain grayscale transition-all duration-300"
+    quality="max"
+    loading="lazy"
+    decoding="async"
+  />
+</div>
+
+<style>
+  /* Breakpoints de referencia en Tailwind:
+     sm: 640px
+     md: 768px
+     lg: 1024px
+     xl: 1280px
+     2xl: 1536px
+  */
+</style> 

@@ -1,0 +1,120 @@
+---
+import Layout from './Layout.astro';
+
+interface Props {
+  frontmatter: {
+    title: string;
+    description: string;
+    pubDate: string;
+    author: string;
+    image?: {
+      url: string;
+      alt: string;
+    };
+  };
+}
+
+const { frontmatter } = Astro.props;
+---
+
+<Layout title={frontmatter.title}>
+  <article class="max-w-3xl mx-auto px-4" transition:animate="slide">
+    <!-- Encabezado del post -->
+    <header class="mb-16 text-center">
+      <h1 class="text-5xl font-light tracking-wide mb-6 leading-tight">
+        {frontmatter.title}
+      </h1>
+      <div class="text-custom-light mb-8 space-y-3">
+        <p class="text-lg italic font-light">{frontmatter.description}</p>
+        <div class="flex items-center justify-center gap-4 text-sm opacity-75">
+          <time>{frontmatter.pubDate}</time>
+          <span>·</span>
+          <span>{frontmatter.author}</span>
+        </div>
+      </div>
+      {frontmatter.image && (
+        <div class="relative h-[60vh] max-h-[600px] w-full mb-16">
+          <img
+            src={frontmatter.image.url}
+            alt={frontmatter.image.alt}
+            class="absolute inset-0 w-full h-full object-cover rounded-lg shadow-xl"
+          />
+        </div>
+      )}
+    </header>
+
+    <!-- Contenido del post -->
+    <div class="prose prose-lg mx-auto">
+      <slot />
+    </div>
+
+    <!-- Navegación entre posts -->
+    <nav class="mt-16 pt-8 border-t border-custom-light/20">
+      <div class="flex justify-between text-sm">
+        <a href="/blog" class="text-custom-light hover:text-white transition-colors flex items-center gap-2 group">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Volver al blog
+        </a>
+      </div>
+    </nav>
+  </article>
+</Layout>
+
+<style>
+  /* Animaciones y efectos */
+  .prose {
+    transition: transform 0.3s ease;
+  }
+
+  article:hover .prose {
+    transform: translateZ(0);
+  }
+
+  /* Efecto de hover en la imagen */
+  img {
+    transition: transform 0.5s ease;
+  }
+
+  .relative:hover img {
+    transform: scale(1.02);
+  }
+
+  /* Estilos específicos para el contenido del post */
+  :global(.prose) {
+    max-width: 65ch;
+  }
+
+  :global(.prose p) {
+    margin-bottom: 1.5em;
+    line-height: 1.8;
+  }
+
+  :global(.prose blockquote) {
+    font-style: italic;
+    border-left: 4px solid theme('colors.custom-light');
+    padding-left: 1em;
+    margin-left: 0;
+    color: theme('colors.gray.400');
+  }
+
+  :global(.prose pre) {
+    background-color: theme('colors.gray.900');
+    border-radius: 0.5rem;
+    padding: 1em;
+    overflow-x: auto;
+  }
+
+  :global(.prose code) {
+    color: theme('colors.custom-light');
+    background-color: theme('colors.gray.900');
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+
+  :global(.prose img) {
+    margin: 2em auto;
+  }
+</style> 

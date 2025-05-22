@@ -1,161 +1,267 @@
 ---
 const songs = [
   {
-    title: "Smokestack Lightnin'",
+    title: "MICROFUNK",
     artist: "Howlin' Wolf",
     src: "/songs/song2.mp3",
+    cover: "/images/hacecalor.jpg",
+  },
+  {
+    title: "They, Them",
+    artist: "Jan Jelinek",
+    src: "/songs/They, Them - Jan Jelinek.mp3",
+    cover: "/images/Jelinek.jpg",
+  },
+  {
+    title: "48 Hour Crack In Your Bass",
+    artist: "Magda",
+    src: "/songs/48 Hour Crack In Your Bass - Magda.mp3",
+    cover: "/images/48hour.jpg",
+  },
+  {
+    title: "Back It Up",
+    artist: "Martin Buttrich",
+    src: "/songs/Back It Up - Martin Buttrich.mp3",
+    cover: "/images/Martin Buttrich.jpg",
+  },
+  {
+    title: "Sesion 3",
+    artist: "Unknown Artist",
+    src: "/songs/song3.mp3",
     cover: "/images/port1.png",
   },
- 
 ];
 ---
 
-<style>
-  .player {
-    max-width: 400px;
-    margin: auto;
-    text-align: center;
-    font-family: sans-serif;
-  }
-
-  img {
-    width: 100%;
-    border-radius: 1rem;
-  }
-
-  button {
-    margin: 1rem;
-    font-size: 1.5rem;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    background-color: #4caf50;
-    color: white;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background-color: #45a049;
-  }
-
-  .progress {
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  @media (max-width: 600px) {
-    button {
-      font-size: 1rem;
-      padding: 0.5rem;
-    }
-  }
-</style>
-
-<div class="player">
-  <img id="cover" src={songs[0].cover} alt="Album cover" />
-  <h2 id="title">{songs[0].title}</h2>
-  <h3 id="artist">{songs[0].artist}</h3>
+<div class="max-w-md mx-auto text-center font-sans p-8 bg-black/30 backdrop-blur-lg rounded-3xl shadow-2xl">
+  <div class="relative">
+    <img 
+      id="cover" 
+      src={songs[0].cover} 
+      alt="Album cover" 
+      class="w-full aspect-square object-cover rounded-2xl shadow-lg mb-6 transition-transform duration-300 hover:scale-105"
+    />
+    <div id="loading" class="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center hidden">
+      <div class="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"></div>
+    </div>
+  </div>
+  
+  <h2 id="title" class="text-2xl font-bold text-white mb-2">{songs[0].title}</h2>
+  <h3 id="artist" class="text-lg text-white/80 mb-6">{songs[0].artist}</h3>
 
   <audio id="audio" src={songs[0].src}></audio>
 
-  <div>
-    <button id="prev">⏮️</button>
-    <button id="play-pause">⏯️</button>
-    <button id="next">⏭️</button>
+  <div class="flex justify-center items-center gap-6 mb-6">
+    <button 
+      id="prev" 
+      class="text-2xl p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200 shadow-md backdrop-blur-sm hover:scale-110"
+      title="Anterior"
+    >
+      ⏮️
+    </button>
+    <button 
+      id="play-pause" 
+      class="text-3xl p-4 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200 shadow-md backdrop-blur-sm hover:scale-110"
+      title="Reproducir/Pausar"
+    >
+      ⏯️
+    </button>
+    <button 
+      id="next" 
+      class="text-2xl p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200 shadow-md backdrop-blur-sm hover:scale-110"
+      title="Siguiente"
+    >
+      ⏭️
+    </button>
   </div>
 
-  <input class="progress" type="range" id="progress" value="0" />
+  <div class="relative w-full">
+    <input 
+      class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer hover:bg-white/20 transition-colors duration-200" 
+      type="range" 
+      id="progress" 
+      value="0" 
+    />
+    <div id="time" class="flex justify-between text-xs text-white/60 mt-2">
+      <span id="current-time">0:00</span>
+      <span id="duration">0:00</span>
+    </div>
+  </div>
 </div>
 
-<script type="module">
-  document.addEventListener("DOMContentLoaded", () => {
-    const songs = [
-      {
-        title: "MICROFUNK'",
-        artist: "Howlin' Wolf",
-        src: "/songs/song2.mp3",
-        cover: "/images/hacecalor.jpg",
-      },
-      {
-        title: "They, Them ",
-        artist: "- Jan Jelinek",
-        src: "/songs/They, Them - Jan Jelinek.mp3",
-        cover: "/images/Jelinek.jpg",
-      },
-      {
-        title: "48 Hour Crack In Your Bass",
-        artist: "Magda",
-        src: "/songs/48 Hour Crack In Your Bass - Magda.mp3",
-        cover: "/images/48hour.jpg",
-      },
-      {
-        title: "Back It Up",
-        artist: "Martin Buttrich",
-        src: "/songs/Back It Up - Martin Buttrich.mp3",
-        cover: "/images/Martin Buttrich.jpg",
-      },
-      {
-        title: "Sesion 4",
-        artist: "Unknown Artist",
-        src: "/songs/song6.mp3",
-        cover: "/images/port1.png",
-      },
-    ];
+<style>
+  /* Estilizar la barra de progreso */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+  }
 
-    let index = 0;
+  input[type="range"]::-webkit-slider-runnable-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    height: 0.5rem;
+  }
 
-    const audio = document.getElementById("audio");
-    const title = document.getElementById("title");
-    const artist = document.getElementById("artist");
-    const cover = document.getElementById("cover");
-    const progress = document.getElementById("progress");
-    const playPauseButton = document.getElementById("play-pause");
-    const prevButton = document.getElementById("prev");
-    const nextButton = document.getElementById("next");
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -0.25rem;
+    transition: transform 0.2s;
+  }
 
-    function loadSong(song) {
-      title.textContent = song.title;
-      artist.textContent = song.artist;
-      audio.src = song.src;
-      cover.src = song.cover;
-    }
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
 
-    function togglePlayPause() {
-      if (audio.paused) {
-        audio.play();
-        playPauseButton.textContent = "⏸️";
-      } else {
-        audio.pause();
-        playPauseButton.textContent = "⏯️";
-      }
-    }
+  /* Efecto de brillo en los botones */
+  button:hover {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+</style>
 
-    function prevSong() {
-      index = (index - 1 + songs.length) % songs.length;
-      loadSong(songs[index]);
-      audio.play();
+<script>
+  const songs = [
+    {
+      title: "MICROFUNK",
+      artist: "Howlin' Wolf",
+      src: "/songs/song2.mp3",
+      cover: "/images/hacecalor.jpg",
+    },
+    {
+      title: "They, Them",
+      artist: "Jan Jelinek",
+      src: "/songs/They, Them - Jan Jelinek.mp3",
+      cover: "/images/Jelinek.jpg",
+    },
+    {
+      title: "48 Hour Crack In Your Bass",
+      artist: "Magda",
+      src: "/songs/48 Hour Crack In Your Bass - Magda.mp3",
+      cover: "/images/48hour.jpg",
+    },
+    {
+      title: "Back It Up",
+      artist: "Martin Buttrich",
+      src: "/songs/Back It Up - Martin Buttrich.mp3",
+      cover: "/images/Martin Buttrich.jpg",
+    },
+    {
+      title: "Sesion 3",
+      artist: "Unknown Artist",
+      src: "/songs/song3.mp3",
+      cover: "/images/port1.png",
+    },
+  ];
+
+  let index = 0;
+
+  const audio = document.getElementById("audio");
+  const title = document.getElementById("title");
+  const artist = document.getElementById("artist");
+  const cover = document.getElementById("cover");
+  const progress = document.getElementById("progress");
+  const playPauseButton = document.getElementById("play-pause");
+  const prevButton = document.getElementById("prev");
+  const nextButton = document.getElementById("next");
+  const loading = document.getElementById("loading");
+  const currentTimeEl = document.getElementById("current-time");
+  const durationEl = document.getElementById("duration");
+
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+
+  function loadSong(song) {
+    loading.classList.remove("hidden");
+    title.textContent = song.title;
+    artist.textContent = song.artist;
+    audio.src = song.src;
+    cover.src = song.cover;
+
+    // Manejar errores de carga
+    audio.onerror = () => {
+      alert("Error al cargar la canción. Por favor, inténtalo de nuevo.");
+      loading.classList.add("hidden");
+    };
+
+    // Cuando el audio está listo
+    audio.oncanplay = () => {
+      loading.classList.add("hidden");
+      durationEl.textContent = formatTime(audio.duration);
+    };
+
+    // Cuando la imagen está cargada
+    cover.onload = () => {
+      loading.classList.add("hidden");
+    };
+  }
+
+  function togglePlayPause() {
+    if (audio.paused) {
+      audio.play().catch(error => {
+        console.error("Error al reproducir:", error);
+        alert("Error al reproducir la canción. Por favor, inténtalo de nuevo.");
+      });
       playPauseButton.textContent = "⏸️";
+    } else {
+      audio.pause();
+      playPauseButton.textContent = "⏯️";
     }
+  }
 
-    function nextSong() {
-      index = (index + 1) % songs.length;
-      loadSong(songs[index]);
-      audio.play();
-      playPauseButton.textContent = "⏸️";
-    }
-
-    audio.addEventListener("timeupdate", () => {
-      progress.value = (audio.currentTime / audio.duration) * 100 || 0;
-    });
-
-    progress.addEventListener("input", () => {
-      audio.currentTime = (progress.value / 100) * audio.duration;
-    });
-
-    playPauseButton.addEventListener("click", togglePlayPause);
-    prevButton.addEventListener("click", prevSong);
-    nextButton.addEventListener("click", nextSong);
-
+  function prevSong() {
+    index = (index - 1 + songs.length) % songs.length;
     loadSong(songs[index]);
+    audio.play().catch(console.error);
+    playPauseButton.textContent = "⏸️";
+  }
+
+  function nextSong() {
+    index = (index + 1) % songs.length;
+    loadSong(songs[index]);
+    audio.play().catch(console.error);
+    playPauseButton.textContent = "⏸️";
+  }
+
+  // Actualizar la barra de progreso y el tiempo
+  audio.addEventListener("timeupdate", () => {
+    progress.value = (audio.currentTime / audio.duration) * 100 || 0;
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+  });
+
+  // Cuando termina una canción, reproducir la siguiente
+  audio.addEventListener("ended", nextSong);
+
+  // Cambiar la posición de la canción
+  progress.addEventListener("input", () => {
+    const time = (progress.value / 100) * audio.duration;
+    audio.currentTime = time;
+  });
+
+  playPauseButton.addEventListener("click", togglePlayPause);
+  prevButton.addEventListener("click", prevSong);
+  nextButton.addEventListener("click", nextSong);
+
+  // Cargar la primera canción
+  loadSong(songs[index]);
+
+  // Manejar atajos de teclado
+  document.addEventListener("keydown", (e) => {
+    if (e.code === "Space") {
+      e.preventDefault();
+      togglePlayPause();
+    } else if (e.code === "ArrowLeft") {
+      prevSong();
+    } else if (e.code === "ArrowRight") {
+      nextSong();
+    }
   });
 </script>

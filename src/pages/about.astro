@@ -1,9 +1,10 @@
 ---
 import { literal } from "astro:schema";
-import './styles/global.css'
+
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-const pageTitle = "Sobre mi"
+import Layout from '../layouts/Layout.astro';
+const pageTitle = "Sobre Mi";
 
 const identity = {
 	firsname: "Sebastian",
@@ -40,61 +41,17 @@ const textCase = "uppercase";
 const fontWeight = "bold";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		
-		<title>{pageTitle}</title>
-		
-		<style define:vars={{skillColor, fontWeight, textCase}}>
-			h1 {
-			  color: purple;
-			  font-size: 4rem;
-			}
-			.skill {
-				color:	var(--skillColor);
-				font-weight: var(--fontWeight);
-				text-transform: var(--textCase);
-			}
-		  </style>
-		
-		
-		<link href="https://fonts.cdnfonts.com/css/runstop-restore" rel="stylesheet">
-                
-	</head>
-	<body>
-		<Header/>
-		<h1>{pageTitle}</h1>
-
-
-
-        <h2>.... !Y mi nuevo sitio Astro!    </h2>
-
-		<p>Estoy trabajando en un blog siguiendo el tutorial de la pagina de astro </p>
-		<p>Este sitio se ira actualizando a medida que vaya completando parte del tutorial!</p>
-
-		<p>He aqui algunos datos sobre mi:</p>
-
-		<ul>
-			<li>Me llamo {identity.firsname}.</li>
-			<li>Vivo en {identity.country}</li>
-			{identity.hobbies.length >= 2 &&
-				<li>Dos mis cosas favoritas en el mundo sooon!: {identity.hobbies[0]} <b>yyyy</b> {identity.hobbies[1]}</li>}
-				<li>Y {identity.hobbies[2]} o {identity.hobbies[3]}</li>			
-		</ul>
-		<p>Mis habilidades en lo que es la programacion son:</p>
-		<ul>
-			{skills.map((skill) => <li class="skill">{skill.name} {skill.percent}%</li>)}
-			
-			
-		</ul>
-
-		{happy && <p>sii!</p>}
-		{finished && <p>He terminado este tutorial</p>}
-		{goal === 7 ? <p>Mi objetivo es terminar en una semana</p> : <p>Mi objetivo no son 7 dias</p>}
-	<Footer/>
-	</body>
-</html>
+<Layout title={pageTitle}>
+  <div transition:animate="slide">
+    <h1 class="text-4xl font-light tracking-wide mb-6">{pageTitle}</h1>
+    <div class="prose prose-lg">
+      <p class="text-lg leading-relaxed">
+        Esta es una página de ejemplo para mostrar las transiciones entre páginas.
+        
+      </p>
+      <a href="/" class="text-gray-800 hover:text-gray-600 underline">
+        Volver al inicio
+      </a>
+    </div>
+  </div>
+</Layout>

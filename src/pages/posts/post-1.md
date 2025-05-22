@@ -1,28 +1,34 @@
 ---
-title: 'Mi primera publicacion en el blog'
-pubDate: 22-04-2025
-description: 'Esta es la primera publicacion de mi nuevo blog Astro'
-author: 'YO, ¿si no quien?'
+layout: ../../layouts/BlogPost.astro
+title: 'Mi primer post en el blog'
+pubDate: '2024-03-15'
+description: 'Este es el primer post de mi nuevo blog Astro.'
+author: '1o11'
 image:
-    url:'https://docs.astro.build/assets/full-logo-light.png'
-    alt:'El logotipo de astro'
-tags: ["astro","bloguea","aprender en publico"]
+  url: 'https://images.unsplash.com/photo-1581276879432-15e50529f34b'
+  alt: 'Imagen minimalista en blanco y negro'
 ---
 
-# Mi primera publicacion el blog
+# Mi primer post en el blog
 
-Publicado el: 2025-04-22
+¡Bienvenidos a mi blog! Este es mi primer post, y estoy emocionado de compartir mis pensamientos y experiencias con ustedes.
 
-!Bienvenido a mi _nuevo blog_ sobre el aprendezaje de Astro! Aqui, voy a compartir mi viaje de aprendizaje
+## Lo que aprenderás en este blog
 
-## Lo que he conseguido
+- Desarrollo web moderno
+- Diseño minimalista
+- Experiencias personales
+- Y mucho más...
 
-1. **Instalación de Astro**: En primer lugar, he creado un nuevo proyecto Astro y configurar mis cuentas en línea.
+El minimalismo no es solo una estética, es una forma de vida. Es encontrar belleza en la simplicidad y funcionalidad en lo esencial.
 
-2. **Creación de páginas**: Luego aprendí cómo hacer páginas creando nuevos archivos `.astro` y colocándolos en la carpeta `src/pages/`.
+> "La perfección se alcanza no cuando no hay nada más que agregar, sino cuando no hay nada más que quitar." - Antoine de Saint-Exupéry
 
-3. **Creación de publicaciones**: ¡Esta es mi primera publicación! ¡Ahora tengo páginas de Astro y publicaciónes en Markdown!
+### Próximos temas
 
-## Próximos pasos
+1. La importancia del espacio negativo
+2. Tipografía y legibilidad
+3. Diseño responsivo
+4. Optimización de rendimiento
 
-Terminaré el tutorial de Astro, y luego seguiré añadiendo más publicaciones. Mira este espacio para más por venir.
+Mantente atento para más contenido interesante.

@@ -1,0 +1,186 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+
+const pageTitle = "Sobre";
+
+const services = [
+  {
+    title: "Diseño Visual",
+    description: "Ideas."
+  },
+  {
+    title: "Desarrollo Web",
+    description: "Creación de experiencias web ."
+  },
+  {
+    title: "Fotografía",
+    description: "Saco fotos."
+  },
+  {
+    title: "Dirección Creativa",
+    description: "???."
+  }
+];
+---
+
+<Layout title={pageTitle}>
+  <div id="page-container" class="bg-white transition-colors duration-700">
+    <!-- Sección de Servicios -->
+    <section class="min-h-screen flex items-center py-20 md:py-0">
+      <div class="max-w-7xl mx-auto px-4 w-full">
+        <!-- Título principal -->
+        <div class="mb-12 md:mb-16">
+          <h1 class="text-5xl md:text-7xl font-serif transition-colors duration-700">
+            Mis<br/>
+            servicios
+          </h1>
+        </div>
+
+        <!-- Grid de servicios -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
+          {services.map((service, index) => (
+            <div class="space-y-4 md:space-y-6">
+              <h2 class="text-xl md:text-2xl font-serif transition-colors duration-700">{service.title}</h2>
+              <p class="text-sm md:text-base text-gray-600 leading-relaxed transition-colors duration-700">{service.description}</p>
+            </div>
+          ))}
+        </div>
+
+        <!-- Botón de contacto -->
+        <div class="mt-12 md:mt-16">
+          <button 
+            id="contact-button"
+            class="inline-flex items-center space-x-3 md:space-x-4 text-lg md:text-xl hover:opacity-70 transition-all duration-300"
+          >
+            <span class="font-serif transition-colors duration-700">Contacto</span>
+            <svg class="w-6 h-6 md:w-8 md:h-8 transform rotate-45 transition-colors duration-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de Contacto -->
+    <section id="contact" class="min-h-screen flex items-center py-20 md:py-0">
+      <div class="max-w-7xl mx-auto px-4 w-full">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+          <!-- Texto principal -->
+          <div class="space-y-6 md:space-y-8">
+            <h2 class="text-3xl md:text-5xl lg:text-6xl font-serif leading-tight transition-colors duration-700">
+              Laissez moi comprendre vos valeurs et vos besoins.<br class="hidden md:block"/>
+              <span class="block mt-4 md:mt-8">
+                Créons ensemble un site unique qui vous ressemble.
+              </span>
+            </h2>
+          </div>
+
+          <!-- Información de contacto -->
+          <div class="space-y-12 md:space-y-16 md:text-right">
+            <div class="space-y-1 md:space-y-2">
+              <h3 class="text-gray-400 uppercase tracking-wider text-xs md:text-sm transition-colors duration-700">EMAIL</h3>
+              <a href="mailto:hello@example.com" class="text-lg md:text-xl block hover:opacity-70 transition-all duration-300">
+                hello@example.com
+              </a>
+            </div>
+
+            <div class="space-y-1 md:space-y-2">
+              <h3 class="text-gray-400 uppercase tracking-wider text-xs md:text-sm transition-colors duration-700">PHONE</h3>
+              <a href="tel:+33695547052" class="text-lg md:text-xl block hover:opacity-70 transition-all duration-300">
+                +33695547052
+              </a>
+            </div>
+
+            <div class="space-y-1 md:space-y-2">
+              <h3 class="text-gray-400 uppercase tracking-wider text-xs md:text-sm transition-colors duration-700">SOCIAL</h3>
+              <a href="https://x.com/Booo_red" target="_blank" rel="noopener noreferrer" class="text-lg md:text-xl block hover:opacity-70 transition-all duration-300">
+                T
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  h1, h2 {
+    line-height: 1.1;
+  }
+
+  @media (max-width: 768px) {
+    h1, h2 {
+      line-height: 1.2;
+    }
+  }
+
+  .dark-mode {
+    @apply bg-black;
+  }
+
+  .dark-mode h1,
+  .dark-mode h2,
+  .dark-mode p,
+  .dark-mode span,
+  .dark-mode a,
+  .dark-mode button,
+  .dark-mode svg {
+    @apply text-white;
+  }
+
+  .dark-mode p {
+    @apply text-gray-300;
+  }
+
+  section {
+    scroll-snap-align: start;
+  }
+
+  @media (max-width: 768px) {
+    section {
+      scroll-snap-align: none;
+    }
+  }
+</style>
+
+<script>
+  const container = document.getElementById('page-container');
+  const contactButton = document.getElementById('contact-button');
+  const contactSection = document.getElementById('contact');
+  const servicesSection = document.querySelector('section:first-of-type');
+
+  // Función para manejar el cambio de modo
+  function handleColorMode() {
+    if (!container || !contactSection || !servicesSection) return;
+
+    const contactRect = contactSection.getBoundingClientRect();
+    const servicesRect = servicesSection.getBoundingClientRect();
+    
+    // Si la sección de contacto está más visible que la de servicios
+    if (Math.abs(contactRect.top) < Math.abs(servicesRect.top)) {
+      container.classList.add('dark-mode');
+    } else {
+      container.classList.remove('dark-mode');
+    }
+  }
+
+  // Event listener para el botón
+  contactButton?.addEventListener('click', function(e: Event) {
+    e.preventDefault();
+    contactSection?.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Event listener para el scroll
+  window.addEventListener('scroll', handleColorMode, { passive: true });
+
+  // Verificar el estado inicial
+  handleColorMode();
+</script> 
