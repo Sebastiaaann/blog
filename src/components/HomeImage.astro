@@ -4,9 +4,10 @@ import inicioImagen from '../assets/inicio-imagen.jpg';
 
 interface Props {
   class?: string;
+  slug: string;
 }
 
-const { class: className } = Astro.props;
+const { class: className, slug } = Astro.props;
 ---
 
 <div class:list={[
@@ -23,6 +24,7 @@ const { class: className } = Astro.props;
     quality="max"
     loading="lazy"
     decoding="async"
+    transition:name={'img-${slug}'}
   />
 </div>
 
