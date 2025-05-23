@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "astro": "^5.8.0",
-    "music-metadata": "^11.2.3"
+    "music-metadata": "^11.2.3",
+    "undici": "^7.10.0"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^5.1.5",
