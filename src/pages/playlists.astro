@@ -1,0 +1,251 @@
+---
+import Layout from '../layouts/Layout.astro';
+import playlistsData from '../data/playlists.json';
+
+interface Playlist {
+  id: string;
+  title: string;
+  cover: string;
+}
+
+const playlists: Playlist[] = playlistsData.playlists;
+
+// Asignar estilos aleatorios a los títulos
+const getRandomStyle = (index: number) => {
+  const fonts = ['font-serif', 'font-mono', 'font-sans'];
+  const sizes = ['text-lg', 'text-xl', 'text-2xl', 'text-3xl'];
+  const rotations = [
+    'rotate-3', '-rotate-2', 'rotate-1', '-rotate-1', 'rotate-2', '-rotate-3'
+  ];
+  const margins = [
+    'mt-8', 'mt-16', 'mt-24', 'mt-32',
+    'ml-8', 'ml-16', 'ml-24', 'ml-32'
+  ];
+
+  return {
+    font: fonts[index % fonts.length],
+    size: sizes[index % sizes.length],
+    rotation: rotations[Math.floor(Math.random() * rotations.length)],
+    margin: margins[Math.floor(Math.random() * margins.length)]
+  };
+};
+
+const playlistsWithStyles = playlists.map((playlist, index) => ({
+  ...playlist,
+  style: getRandomStyle(index)
+}));
+---
+
+<Layout title="List">
+  <div class="min-h-screen relative overflow-hidden">
+    <div class="background-container fixed top-0 left-0 w-full h-full">
+      <div class="bg-layer"></div>
+      <div class="grain-layer"></div>
+    </div>
+
+    <div class="overflow-hidden mb-8 md:mb-16 relative z-20">
+      <div class="moving-text whitespace-nowrap font-mono text-sm md:text-lg backdrop-blur-[2px] text-neutral-600">
+        Ctrl+R • F5 • ⌘+R • Refresh • Reload • Update • Sync • Reset • Restart • Renew • Ctrl+R • F5 • ⌘+R • Refresh • Reload • Update • Sync • Reset • Restart • Renew •
+      </div>
+    </div>
+
+    <main class="relative z-10 max-w-[1600px] mx-auto">
+      <div class="flex flex-wrap gap-4 md:gap-16 items-start">
+        {playlistsWithStyles.map(playlist => (
+          <a 
+            href={`/${playlist.id}`} 
+            class={`
+              group relative hover:-translate-y-2 hover:scale-125 transition-all duration-500 ease-out
+              ${playlist.style.margin} ${playlist.style.rotation}
+            `}
+          >
+            <h2 class={`
+              ${playlist.style.font} text-base md:${playlist.style.size}
+              hover:text-blue-600 cursor-pointer transition-all duration-500
+              tracking-wide hover:font-bold
+            `}>
+              {playlist.title}
+            </h2>
+          </a>
+        ))}
+      </div>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .background-container {
+    z-index: 0;
+    perspective: 1000px;
+  }
+
+  .bg-layer {
+    position: absolute;
+    inset: 0;
+    background: white;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease-out;
+    will-change: transform;
+  }
+
+  .grain-layer {
+    position: absolute;
+    inset: 0;
+    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url%28%23noise%29%22/%3E%3C/svg%3E');
+    opacity: 0.03;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
+  .flex-wrap {
+    justify-content: space-evenly;
+  }
+  
+  /* Animación suave de flotación solo para los links dentro del main */
+  main a {
+    animation: float 8s ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    transform-origin: center;
+    transition: transform 0.4s ease-out;
+    will-change: transform;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) rotate(var(--rotation, 0deg));
+    }
+    50% {
+      transform: translateY(-10px) rotate(var(--rotation, 0deg));
+    }
+  }
+  
+  /* Asignar delays aleatorios a los elementos */
+  a:nth-child(1) { --delay: 0s; }
+  a:nth-child(2) { --delay: 1s; }
+  a:nth-child(3) { --delay: 2s; }
+  a:nth-child(4) { --delay: 3s; }
+  a:nth-child(5) { --delay: 4s; }
+  a:nth-child(6) { --delay: 5s; }
+
+  /* Animación del texto en movimiento */
+  .moving-text {
+    display: inline-block;
+    animation: moveText 30s linear infinite;
+  }
+
+  @keyframes moveText {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+</style>
+
+<script>
+  let cleanup: (() => void) | null = null;
+
+  function initializeEffects() {
+    const bgLayer = document.querySelector('.bg-layer') as HTMLElement;
+    // Cambiamos el selector para solo seleccionar los links dentro del main
+    const floatingTexts = document.querySelectorAll('main a') as NodeListOf<HTMLElement>;
+    let isMouseMoving = false;
+    let mouseTimeout: number;
+
+    if (bgLayer) {
+      // Efecto de distorsión con el mouse
+      function handleMouseMove(e: MouseEvent) {
+        const { clientX, clientY } = e;
+        const { innerWidth, innerHeight } = window;
+
+        // Marcar que el mouse se está moviendo
+        isMouseMoving = true;
+        clearTimeout(mouseTimeout);
+
+        // Calcular la posición relativa del mouse (entre -1 y 1)
+        const xPos = (clientX / innerWidth - 0.5) * 2;
+        const yPos = (clientY / innerHeight - 0.5) * 2;
+
+        // Calcular la distancia desde el centro
+        const distance = Math.sqrt(xPos * xPos + yPos * yPos);
+        
+        // Calcular efectos para el fondo
+        const scale = 1.02 + distance * 0.03;
+        const distortX = xPos * 3;
+        const distortY = yPos * 3;
+
+        // Aplicar transformación al fondo
+        const transform = `
+          perspective(1000px)
+          rotateX(${yPos * -2}deg)
+          rotateY(${xPos * 2}deg)
+          scale(${scale})
+          skew(${distortX}deg, ${distortY}deg)
+        `;
+
+        bgLayer.style.transform = transform;
+
+        // Mover los textos flotantes con un efecto sutil
+        floatingTexts.forEach((text, index) => {
+          const offset = (index % 2 === 0) ? 1 : -1;
+          const textTransform = `
+            translate(${xPos * 8 * offset}px, ${yPos * 8 * offset}px)
+            rotate(var(--rotation, 0deg))
+          `;
+          text.style.transform = textTransform;
+        });
+
+        // Configurar el timeout para resetear cuando el mouse se detenga
+        mouseTimeout = setTimeout(() => {
+          if (isMouseMoving) {
+            isMouseMoving = false;
+            bgLayer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1) skew(0, 0)';
+            // Resetear posición de los textos
+            floatingTexts.forEach((text) => {
+              text.style.transform = 'translate(0, 0) rotate(var(--rotation, 0deg))';
+            });
+          }
+        }, 150) as unknown as number;
+      }
+
+      function handleMouseLeave() {
+        isMouseMoving = false;
+        bgLayer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1) skew(0, 0)';
+        // Resetear posición de los textos
+        floatingTexts.forEach((text) => {
+          text.style.transform = 'translate(0, 0) rotate(var(--rotation, 0deg))';
+        });
+      }
+
+      // Agregar event listeners
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseleave', handleMouseLeave);
+
+      // Retornar función de limpieza
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseleave', handleMouseLeave);
+      };
+    }
+    return null;
+  }
+
+  // Manejar la inicialización y limpieza de efectos
+  document.addEventListener('astro:page-load', () => {
+    // Limpiar efectos anteriores si existen
+    if (cleanup) {
+      cleanup();
+    }
+    // Inicializar nuevos efectos
+    cleanup = initializeEffects();
+  });
+
+  // Limpiar efectos cuando la página se desmonta
+  document.addEventListener('astro:before-swap', () => {
+    if (cleanup) {
+      cleanup();
+      cleanup = null;
+    }
+  });
+</script> 

@@ -1,0 +1,229 @@
+---
+interface Props {
+  images: {
+    url: string;
+    alt: string;
+  }[];
+}
+
+const { images } = Astro.props;
+---
+
+<div class="diary-container relative w-[90%] mx-auto mt-4 group">
+  <div class="book-wrapper relative w-full h-[calc(90vh-4rem)]">
+    <div class="book-fold absolute left-1/2 top-0 w-[2px] h-full transform -translate-x-1/2 z-20">
+      <div class="h-full w-full bg-gradient-to-r from-black/10 via-transparent to-black/10"></div>
+    </div>
+    <div class="pages-container relative w-full h-full overflow-hidden">
+      {images.map((image, index) => (
+        <div class={`diary-page absolute inset-0 w-full h-full transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+             data-index={index}>
+          <div class="page-content relative w-full h-full">
+            <img 
+              src={image.url} 
+              alt={image.alt}
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 mix-blend-multiply bg-[#e8e0db] opacity-10"></div>
+            <div class="absolute inset-0 mix-blend-overlay bg-noise opacity-5"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent"></div>
+            <div class="page-edges absolute inset-0">
+              <div class="absolute top-0 left-0 w-[10%] h-full bg-gradient-to-r from-black/5 to-transparent"></div>
+              <div class="absolute top-0 right-0 w-[10%] h-full bg-gradient-to-l from-black/5 to-transparent"></div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <div class="controls absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-4 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <button class="prev-btn px-4 py-2 bg-black/30 backdrop-blur-sm rounded-full text-white/80 hover:bg-black/40 transition-colors">
+        ←
+      </button>
+      <button class="next-btn px-4 py-2 bg-black/30 backdrop-blur-sm rounded-full text-white/80 hover:bg-black/40 transition-colors">
+        →
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .diary-container {
+    perspective: 1500px;
+  }
+
+  .book-wrapper {
+    transform-style: preserve-3d;
+    box-shadow: 
+      0 20px 30px -10px rgba(0,0,0,0.3),
+      0 0 15px rgba(0,0,0,0.1);
+    border: 12px solid #2c2c2c;
+    border-radius: 4px;
+    background: #1a1a1a;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .book-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: -12px;
+    background: 
+      repeating-linear-gradient(45deg, 
+        rgba(0,0,0,0.05) 0px, 
+        rgba(0,0,0,0.05) 2px,
+        transparent 2px, 
+        transparent 4px
+      );
+    pointer-events: none;
+    z-index: 25;
+  }
+
+  .book-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: -12px;
+    background: 
+      url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url%28%23noise%29%22/%3E%3C/svg%3E');
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 25;
+  }
+
+  .pages-container {
+    transform-style: preserve-3d;
+    background: #1a1a1a;
+  }
+
+  .diary-page {
+    transform-origin: center;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .page-content {
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+  }
+
+  .page-content::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      linear-gradient(
+        45deg,
+        transparent 0%,
+        rgba(255,255,255,0.05) 50%,
+        transparent 100%
+      );
+    pointer-events: none;
+  }
+
+  .bg-noise {
+    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url%28%23noise%29%22/%3E%3C/svg%3E');
+  }
+
+  .book-fold {
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(0,0,0,0.2) 45%,
+      rgba(255,255,255,0.1) 50%,
+      rgba(0,0,0,0.2) 55%,
+      transparent
+    );
+  }
+</style>
+
+<script>
+  function setupImageDiary() {
+    const container = document.querySelector('.diary-container');
+    if (!container) return null;
+
+    const pages = container.querySelectorAll('.diary-page');
+    const prevBtn = container.querySelector('.prev-btn');
+    const nextBtn = container.querySelector('.next-btn');
+    
+    let currentIndex = 0;
+    let isAnimating = false;
+    let autoplayInterval: ReturnType<typeof setInterval>;
+
+    function showPage(index: number) {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      const currentPage = pages[currentIndex] as HTMLElement;
+      const nextPage = pages[index] as HTMLElement;
+      
+      currentPage.style.opacity = '0';
+      nextPage.style.opacity = '1';
+
+      setTimeout(() => {
+        isAnimating = false;
+      }, 1000);
+
+      currentIndex = index;
+    }
+
+    function nextPage() {
+      const nextIndex = (currentIndex + 1) % pages.length;
+      showPage(nextIndex);
+    }
+
+    function prevPage() {
+      const prevIndex = (currentIndex - 1 + pages.length) % pages.length;
+      showPage(prevIndex);
+    }
+
+    // Configurar autoplay
+    function startAutoplay() {
+      stopAutoplay();
+      autoplayInterval = setInterval(nextPage, 3000);
+    }
+
+    function stopAutoplay() {
+      if (autoplayInterval) {
+        clearInterval(autoplayInterval);
+      }
+    }
+
+    // Event listeners
+    prevBtn?.addEventListener('click', () => {
+      stopAutoplay();
+      prevPage();
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      stopAutoplay();
+      nextPage();
+    });
+
+    container.addEventListener('mouseenter', stopAutoplay);
+    container.addEventListener('mouseleave', startAutoplay);
+
+    // Iniciar autoplay
+    startAutoplay();
+
+    // Cleanup function
+    return () => {
+      stopAutoplay();
+      prevBtn?.removeEventListener('click', prevPage);
+      nextBtn?.removeEventListener('click', nextPage);
+      container.removeEventListener('mouseenter', stopAutoplay);
+      container.removeEventListener('mouseleave', startAutoplay);
+    };
+  }
+
+  // Setup on page load
+  let cleanup: (() => void) | null = null;
+
+  document.addEventListener('astro:page-load', () => {
+    if (cleanup) cleanup();
+    cleanup = setupImageDiary() || null;
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    if (cleanup) cleanup();
+  });
+</script> 

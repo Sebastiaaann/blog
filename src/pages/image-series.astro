@@ -1,0 +1,241 @@
+---
+import Layout from '../layouts/Layout.astro';
+import fondoVideo from '../assets/fondo-image-series.mp4';
+import ImageDiary from '../components/ImageDiary.astro';
+import ImageCollage from '../components/ImageCollage.astro';
+
+const isTransparent = true;
+
+const diaryImages = [
+  {
+    url: '/images/diary/3.jpg',
+    alt: 'Imagen del diario 1'
+  },
+  {
+    url: '/images/diary/2.jpg',
+    alt: 'Imagen del diario 2'
+  },
+  {
+    url: '/images/diary/8.jpg',
+    alt: 'Imagen del diario 3'
+  },
+  {
+    url: '/images/diary/10.jpg',
+    alt: 'Imagen del diario 4'
+  },
+
+
+
+];
+
+const collageImages = [
+  {
+    url: '/images/diary/bf3da493-2e86-420e-95b2-8e947db4b3cb_2048x1536.jpg',
+    alt: 'Collage imagen 1'
+  },
+  {
+    url: '/images/diary/7.jpg',
+    alt: 'Collage imagen 2'
+  },
+  {
+    url: '/images/diary/bf3da493-2e86-420e-95b2-8e947db4b3cb_2048x1536.jpg',
+    alt: 'Collage imagen 3'
+  },
+  {
+    url: '/images/diary/',
+    alt: 'Collage imagen 4'
+  },
+  {
+    url: '/images/diary/b67e1c04-658e-4f2e-b0da-245549099671_5712x4284.jpg',
+    alt: 'Collage imagen 5'
+  },
+  {
+    url: '/images/diary/5.jpg',
+    alt: 'Collage imagen 6'
+  },
+  {
+    url: '/images/diary/GU3s8OLWEAA56XP.jpg',
+    alt: 'Collage imagen 7'
+  },
+  {
+    url: '/images/diary/13.jpg',
+    alt: 'Collage imagen 8'
+  },
+  {
+    url: '/images/diary/12.jpg',
+    alt: 'Collage imagen 9'
+  },
+  {
+    url: '/images/diary/the-lighthouse-md-web.jpg',
+    alt: 'Collage imagen 10'
+  }
+];
+---
+
+<Layout title="Image Series" {isTransparent}>
+  <div class="min-h-screen relative overflow-hidden">
+    <div class="video-container fixed top-0 left-0 w-full h-full">
+      <div class="video-overlay absolute inset-0 z-10 mix-blend-overlay opacity-30"></div>
+      <div class="video-grain absolute inset-0 z-20 mix-blend-soft-light opacity-[0.15]"></div>
+      <video 
+        id="backgroundVideo"
+        class="video-player"
+        autoplay 
+        loop 
+        muted 
+        playsinline
+        preload="auto"
+      >
+        <source src={fondoVideo} type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="relative z-30">
+      <!-- Contenedor del diario -->
+      <div class="container mx-auto">
+        <ImageDiary images={diaryImages} />
+      </div>
+
+      <!-- Contenedor del collage a ancho completo -->
+      <div class="w-screen mt-16">
+        <ImageCollage images={collageImages} />
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .video-container {
+    z-index: 0;
+    perspective: 1000px;
+  }
+
+  .video-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    filter: contrast(1.05) saturate(1.1) brightness(1.05);
+    transform-style: preserve-3d;
+    transition: all 0.2s ease-out;
+    will-change: transform, filter;
+  }
+
+  .video-overlay {
+    background: radial-gradient(
+      circle at center,
+      transparent 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+    backdrop-filter: blur(0.5px);
+    transition: transform 0.2s ease-out;
+    will-change: transform;
+  }
+
+  .video-grain {
+    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url%28%23noise%29%22/%3E%3C/svg%3E');
+    filter: contrast(200%) brightness(150%);
+    animation: grain 8s steps(1) infinite;
+  }
+
+  @keyframes grain {
+    0%, 100% { transform: translate(0, 0) }
+    10% { transform: translate(-1%, -1%) }
+    20% { transform: translate(1%, 1%) }
+    30% { transform: translate(-2%, -2%) }
+    40% { transform: translate(2%, 2%) }
+    50% { transform: translate(-1%, 1%) }
+    60% { transform: translate(1%, -1%) }
+    70% { transform: translate(2%, -2%) }
+    80% { transform: translate(-2%, 2%) }
+    90% { transform: translate(1%, -2%) }
+  }
+
+  video::-webkit-media-controls {
+    display: none !important;
+  }
+
+  @media (max-width: 768px) {
+    .video-player {
+      height: 100dvh;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const video = document.querySelector('#backgroundVideo') as HTMLVideoElement;
+    const videoOverlay = document.querySelector('.video-overlay') as HTMLElement;
+    
+    if (video) {
+      video.play().catch(() => {
+        console.log('Auto-play was prevented');
+      });
+
+      video.addEventListener('pause', () => {
+        video.play();
+      });
+
+      // Efecto parallax y distorsión con el mouse
+      document.addEventListener('mousemove', (e) => {
+        const { clientX, clientY } = e;
+        const { innerWidth, innerHeight } = window;
+
+        // Calcular la posición relativa del mouse (entre -1 y 1)
+        const xPos = (clientX / innerWidth - 0.5) * 2;
+        const yPos = (clientY / innerHeight - 0.5) * 2;
+
+        // Calcular la distancia desde el centro
+        const distance = Math.sqrt(xPos * xPos + yPos * yPos);
+        
+        // Calcular efectos basados en la posición del mouse
+        const scale = 1.1 + distance * 0.05;
+        const blur = distance * 1;
+        const hueRotate = distance * 15;
+        const distortX = xPos * 5;
+        const distortY = yPos * 5;
+
+        // Aplicar transformación y distorsión al video
+        const transform = `
+          perspective(1000px)
+          rotateX(${yPos * -3}deg)
+          rotateY(${xPos * 3}deg)
+          scale(${scale})
+          skew(${distortX}deg, ${distortY}deg)
+        `;
+
+        const filters = `
+          contrast(1.05)
+          saturate(1.1)
+          brightness(1.05)
+          blur(${blur}px)
+          hue-rotate(${hueRotate}deg)
+        `;
+
+        video.style.transform = transform;
+        video.style.filter = filters;
+
+        if (videoOverlay) {
+          videoOverlay.style.transform = `
+            perspective(1000px)
+            rotateX(${yPos * -1.5}deg)
+            rotateY(${xPos * 1.5}deg)
+            scale(1.05)
+            skew(${distortX * 0.5}deg, ${distortY * 0.5}deg)
+          `;
+        }
+      });
+
+      // Resetear la transformación cuando el mouse sale de la ventana
+      document.addEventListener('mouseleave', () => {
+        video.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1.1) skew(0, 0)';
+        video.style.filter = 'contrast(1.05) saturate(1.1) brightness(1.05)';
+        if (videoOverlay) {
+          videoOverlay.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1.05) skew(0, 0)';
+        }
+      });
+    }
+  });
+</script> 

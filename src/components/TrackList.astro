@@ -1,0 +1,55 @@
+---
+interface Track {
+  title: string;
+  artist: string;
+  genre: string;
+  duration: number;
+  url: string;
+}
+
+interface Props {
+  tracks: Track[];
+}
+
+const { tracks } = Astro.props;
+
+function formatDuration(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+---
+
+<div class="mt-8">
+  <table class="w-full text-left text-sm text-neutral-300">
+    <thead>
+      <tr class="border-b border-neutral-700 text-neutral-400">
+        <th class="pb-3 w-12">#</th>
+        <th class="pb-3">Título</th>
+        <th class="pb-3">Álbum</th>
+        <th class="pb-3 text-right">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M8 5a1 1 0 011 1v3h3a1 1 0 110 2H9v3a1 1 0 11-2 0V9H4a1 1 0 110-2h3V6a1 1 0 011-1z"/>
+          </svg>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {tracks.map((track, index) => (
+        <tr class="group hover:bg-white/10 rounded-lg transition-colors">
+          <td class="py-3">{index + 1}</td>
+          <td class="py-3">
+            <div class="flex items-center gap-3">
+              <div>
+                <div class="font-medium text-white">{track.title}</div>
+                <div class="text-sm text-neutral-400">{track.artist}</div>
+              </div>
+            </div>
+          </td>
+          <td class="py-3">{track.genre}</td>
+          <td class="py-3 text-right">{formatDuration(track.duration)}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div> 

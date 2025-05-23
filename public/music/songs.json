@@ -1,0 +1,39 @@
+{
+  "tracks": [
+    {
+      "title": "48 Hour Crack In Your Bass",
+      "artist": "Magda",
+      "genre": "music",
+      "duration": 443.5330612244898,
+      "url": "/music/48 Hour Crack In Your Bass - Magda.mp3"
+    },
+    {
+      "title": "Back It Up",
+      "artist": "Martin Buttrich",
+      "genre": "music",
+      "duration": 308.03591836734694,
+      "url": "/music/Back It Up - Martin Buttrich.mp3"
+    },
+    {
+      "title": "MICROFUNK (with 2000 & ONE / DAVE ELLESMERE): THE WHITE ROOM",
+      "artist": "azimuthfilms",
+      "genre": "music",
+      "duration": 94.6938775510204,
+      "url": "/music/song2.mp3"
+    },
+    {
+      "title": "Step 1 | A.E.I.O.U. (Freaky Mix)",
+      "artist": "In House We Trust",
+      "genre": "music",
+      "duration": 390.0604081632653,
+      "url": "/music/song3.mp3"
+    },
+    {
+      "title": "They, Them",
+      "artist": "Jan Jelinek",
+      "genre": "music",
+      "duration": 440.58122448979594,
+      "url": "/music/They, Them - Jan Jelinek.mp3"
+    }
+  ]
+}

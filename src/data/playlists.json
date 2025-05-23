@@ -1,0 +1,34 @@
+{
+  "playlists": [
+    {
+      "id": "image-series",
+      "title": "image-series",
+      "cover": "/covers/Jelinek.jpg"
+    },
+    {
+      "id": "dom",
+      "title": "дом",
+      "cover": "/covers/hacecalor.jpg"
+    },
+    {
+      "id": "cit-er",
+      "title": "cit-er",
+      "cover": "/covers/couple.jpg"
+    },
+    {
+      "id": "skazka",
+      "title": "сказка.rtf",
+      "cover": "/covers/church.jpg"
+    },
+    {
+      "id": "family",
+      "title": "Family Tree",
+      "cover": "/covers/leaf.jpg"
+    },
+    {
+      "id": "aefft",
+      "title": "AEFFT",
+      "cover": "/covers/flower.jpg"
+    }
+  ]
+} 

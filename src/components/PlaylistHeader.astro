@@ -1,0 +1,51 @@
+---
+interface Track {
+  title: string;
+  artist: string;
+  duration: number;
+}
+
+interface Props {
+  tracks: Track[];
+}
+
+const { tracks } = Astro.props;
+
+// Calcular duración total
+const totalDuration = tracks.reduce((acc, track) => acc + track.duration, 0);
+const hours = Math.floor(totalDuration / 3600);
+const minutes = Math.floor((totalDuration % 3600) / 60);
+
+// Formatear el texto de duración
+const durationText = hours > 0 
+  ? `${hours} h ${minutes} min`
+  : `${minutes} min`;
+---
+
+<header class="py-6">
+  <div class="flex items-end gap-6">
+    <div class="w-52 h-52 bg-neutral-800 shadow-lg">
+      <img 
+        src="/" 
+        alt=""
+        class="w-full h-full object-cover"
+        
+      />
+    </div>
+    <div class="flex-1">
+      <p class="text-sm font-medium uppercase">Lista pública</p>
+      <h1 class="text-8xl font-bold mt-2 mb-6">hot</h1>
+      <div class="flex items-center gap-2 text-sm text-neutral-300">
+        <img 
+          src="/" 
+          alt="" 
+          class="w-6 h-6 rounded-full"
+          
+        />
+        <span class="font-medium"></span>
+        <span class="before:content-['•'] before:mx-2">{tracks.length} canciones</span>
+        <span class="text-neutral-400">{durationText}</span>
+      </div>
+    </div>
+  </div>
+</header> 
