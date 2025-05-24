@@ -7,24 +7,28 @@ interface Props {
   slug: string;
 }
 
-const { class: className, slug } = Astro.props;
+const { class: className } = Astro.props;
 ---
 
 <div class:list={[
   "relative",
   "w-full",
-  "w-[100%]",
-  "h-[300%]",
+  "h-auto",
   className
 ]}>
+  {/* 
+    Usa un valor alto pero no "max" para mejorar velocidad
+    Hace que la imagen principal cargue lo antes posible
+    Indica al navegador que es prioritaria
+  */}
   <Image 
     src={inicioImagen}
     alt="Artistic black and white photograph"
     class="w-full h-auto object-contain grayscale transition-all duration-300"
-    quality="max"
-    loading="lazy"
+    quality={80}
+    loading="eager"
     decoding="async"
-    transition:name={'img-${slug}'}
+    fetchpriority="high"
   />
 </div>
 
@@ -36,4 +40,4 @@ const { class: className, slug } = Astro.props;
      xl: 1280px
      2xl: 1536px
   */
-</style> 
+</style>

@@ -9,99 +9,42 @@ interface Props {
 const { images } = Astro.props;
 ---
 
-<div class="full-width-collage">
-  <div class="collage-grid">
-    {images.map((image, index) => (
-      <div class={`collage-item ${
-        // Primera fila - imágenes más grandes
-        index === 0 ? 'col-span-2 row-span-2' : // Primera imagen grande
-        index === 1 ? 'col-span-1 row-span-2' : // Segunda imagen vertical
-        index === 2 ? 'col-span-2 row-span-1' : // Tercera imagen horizontal
-        // Segunda fila - mezcla de tamaños
-        index === 3 ? 'col-span-1 row-span-1' : // Imagen normal
-        index === 4 ? 'col-span-2 row-span-1' : // Imagen horizontal
-        index === 5 ? 'col-span-1 row-span-2' : // Imagen vertical
-        // Tercera fila - patrón similar
-        index === 6 ? 'col-span-2 row-span-1' :
-        index === 7 ? 'col-span-1 row-span-1' :
-        index === 8 ? 'col-span-1 row-span-1' :
-        'col-span-1 row-span-1'
-      }`}>
-        <img 
-          src={image.url} 
-          alt={image.alt}
-          class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-        />
+<div class="w-full overflow-hidden">
+  <div class="collage-rows w-full max-w-none px-0">
+    {Array.from({ length: Math.ceil(images.length / 3) }).map((_, rowIdx) => (
+      <div class="collage-row grid grid-cols-2 sm:grid-cols-3 gap-2 mb-2">
+        {images.slice(rowIdx * 3, rowIdx * 3 + 3).map((image, colIdx) => (
+          <div class="collage-item relative overflow-hidden bg-black">
+            <img 
+              src={image.url} 
+              alt={image.alt}
+              class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            />
+          </div>
+        ))}
       </div>
     ))}
   </div>
 </div>
 
 <style>
-  .full-width-collage {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    margin-right: calc(-50vw + 50%);
-    overflow: hidden;
-  }
-
-  .collage-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 1rem;
-    padding: 0 1rem;
+  .collage-row {
     width: 100%;
-    max-width: none;
   }
-
   .collage-item {
-    position: relative;
-    overflow: hidden;
+    aspect-ratio: 1/1;
     background: #000;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    position: relative;
   }
-
-  .collage-item::before {
-    content: '';
-    display: block;
-    padding-top: 100%; /* Mantiene proporción cuadrada por defecto */
-  }
-
   .collage-item img {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
-
-  /* Ajustes específicos para diferentes proporciones */
-  .collage-item.row-span-2::before {
-    padding-top: calc(200% + 1rem); /* Altura doble + gap */
-  }
-
-  .collage-item.col-span-2.row-span-1::before {
-    padding-top: 50%; /* Mitad de altura para imágenes horizontales */
-  }
-
-  .collage-item.col-span-2.row-span-2::before {
-    padding-top: 100%; /* Proporción cuadrada para imágenes grandes */
-  }
-
-  @media (max-width: 768px) {
-    .collage-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.5rem;
-      padding: 0 0.5rem;
-    }
-
-    .collage-item {
-      grid-column: span 1 !important;
-      grid-row: span 1 !important;
-    }
-
-    .collage-item::before {
-      padding-top: 100% !important;
-    }
-  }
-</style> 
+</style>

@@ -9,8 +9,8 @@ interface Props {
 const { images } = Astro.props;
 ---
 
-<div class="diary-container relative w-[90%] mx-auto mt-4 group">
-  <div class="book-wrapper relative w-full h-[calc(90vh-4rem)]">
+<div class="diary-container relative w-full mx-auto mt-4 group">
+  <div class="book-wrapper relative w-full h-[calc(90vh-4rem)] md:h-[calc(80vh-4rem)] sm:h-[60vw] xs:h-[80vw]">
     <div class="book-fold absolute left-1/2 top-0 w-[2px] h-full transform -translate-x-1/2 z-20">
       <div class="h-full w-full bg-gradient-to-r from-black/10 via-transparent to-black/10"></div>
     </div>
@@ -23,6 +23,7 @@ const { images } = Astro.props;
               src={image.url} 
               alt={image.alt}
               class="w-full h-full object-cover"
+              loading="lazy"
             />
             <div class="absolute inset-0 mix-blend-multiply bg-[#e8e0db] opacity-10"></div>
             <div class="absolute inset-0 mix-blend-overlay bg-noise opacity-5"></div>
@@ -62,8 +63,32 @@ const { images } = Astro.props;
     background: #1a1a1a;
     position: relative;
     overflow: hidden;
+    max-width: 100vw;
+    max-height: 90vh;
   }
 
+  @media (max-width: 768px) {
+    .book-wrapper {
+      height: 60vw !important;
+      min-height: 300px;
+      border-width: 6px;
+    }
+    .controls {
+      bottom: 2px;
+      gap: 2px;
+    }
+  }
+  @media (max-width: 480px) {
+    .book-wrapper {
+      height: 80vw !important;
+      min-height: 200px;
+      border-width: 3px;
+    }
+    .controls {
+      bottom: 0;
+      gap: 1px;
+    }
+  }
   .book-wrapper::before {
     content: '';
     position: absolute;
@@ -226,4 +251,4 @@ const { images } = Astro.props;
   document.addEventListener('astro:before-swap', () => {
     if (cleanup) cleanup();
   });
-</script> 
+</script>

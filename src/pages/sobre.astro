@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
+
 
 const pageTitle = "Sobre";
 
@@ -49,15 +49,16 @@ const services = [
 
         <!-- Botón de contacto -->
         <div class="mt-12 md:mt-16">
-          <button 
+          <a 
+            href="#contact"
             id="contact-button"
-            class="inline-flex items-center space-x-3 md:space-x-4 text-lg md:text-xl hover:opacity-70 transition-all duration-300"
+            class="inline-flex items-center space-x-3 md:space-x-4 text-lg md:text-xl hover:opacity-70 transition-all duration-300 font-serif transition-colors duration-700"
           >
-            <span class="font-serif transition-colors duration-700">Contacto</span>
+            <span>Contacto</span>
             <svg class="w-6 h-6 md:w-8 md:h-8 transform rotate-45 transition-colors duration-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
-          </button>
+          </a>
         </div>
       </div>
     </section>
@@ -152,35 +153,40 @@ const services = [
 </style>
 
 <script>
-  const container = document.getElementById('page-container');
-  const contactButton = document.getElementById('contact-button');
-  const contactSection = document.getElementById('contact');
-  const servicesSection = document.querySelector('section:first-of-type');
+  function setupDarkModeScroll() {
+    const container = document.getElementById('page-container');
+    const contactButton = document.getElementById('contact-button');
+    const contactSection = document.getElementById('contact');
+    const servicesSection = document.querySelector('section:first-of-type');
 
-  // Función para manejar el cambio de modo
-  function handleColorMode() {
-    if (!container || !contactSection || !servicesSection) return;
-
-    const contactRect = contactSection.getBoundingClientRect();
-    const servicesRect = servicesSection.getBoundingClientRect();
-    
-    // Si la sección de contacto está más visible que la de servicios
-    if (Math.abs(contactRect.top) < Math.abs(servicesRect.top)) {
-      container.classList.add('dark-mode');
-    } else {
-      container.classList.remove('dark-mode');
+    // Función para manejar el cambio de modo
+    function handleColorMode() {
+      if (!container || !contactSection || !servicesSection) return;
+      const contactRect = contactSection.getBoundingClientRect();
+      const servicesRect = servicesSection.getBoundingClientRect();
+      if (Math.abs(contactRect.top) < Math.abs(servicesRect.top)) {
+        container.classList.add('dark-mode');
+      } else {
+        container.classList.remove('dark-mode');
+      }
     }
+
+    // Event listener para el botón
+    contactButton?.addEventListener('click', function(e) {
+      e.preventDefault();
+      contactSection?.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Event listener para el scroll
+    window.addEventListener('scroll', handleColorMode, { passive: true });
+    // Verificar el estado inicial
+    handleColorMode();
   }
 
-  // Event listener para el botón
-  contactButton?.addEventListener('click', function(e: Event) {
-    e.preventDefault();
-    contactSection?.scrollIntoView({ behavior: 'smooth' });
-  });
-
-  // Event listener para el scroll
-  window.addEventListener('scroll', handleColorMode, { passive: true });
-
-  // Verificar el estado inicial
-  handleColorMode();
-</script> 
+  if (typeof window !== 'undefined') {
+    // Astro SPA navigation: re-run script on every page load
+    document.addEventListener('astro:page-load', setupDarkModeScroll);
+    // Also run on first load (for direct navigation)
+    setupDarkModeScroll();
+  }
+</script>

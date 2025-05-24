@@ -6,75 +6,34 @@ import ImageCollage from '../components/ImageCollage.astro';
 
 const isTransparent = true;
 
-const diaryImages = [
-  {
-    url: '/images/diary/3.jpg',
-    alt: 'Imagen del diario 1'
-  },
-  {
-    url: '/images/diary/2.jpg',
-    alt: 'Imagen del diario 2'
-  },
-  {
-    url: '/images/diary/8.jpg',
-    alt: 'Imagen del diario 3'
-  },
-  {
-    url: '/images/diary/10.jpg',
-    alt: 'Imagen del diario 4'
-  },
-
-
-
+// Obtener todas las imágenes de la carpeta diary
+const diaryFilenames = [
+  '1.jpg',
+  '2.jpg',
+  '3.jpg',
+  '4.jpg',
+  '5.jpg',
+  '6.jpg',
+  '7.jpg',
+  '2222.jpg',
+  '9.jpg',
+  '10.jpg',
+  '11.jpg',
+  '13.jpg',
 ];
 
-const collageImages = [
-  {
-    url: '/images/diary/bf3da493-2e86-420e-95b2-8e947db4b3cb_2048x1536.jpg',
-    alt: 'Collage imagen 1'
-  },
-  {
-    url: '/images/diary/7.jpg',
-    alt: 'Collage imagen 2'
-  },
-  {
-    url: '/images/diary/bf3da493-2e86-420e-95b2-8e947db4b3cb_2048x1536.jpg',
-    alt: 'Collage imagen 3'
-  },
-  {
-    url: '/images/diary/GU3s8OLWEAA56XP.jpg',
-    alt: 'Collage imagen 4'
-  },
-  {
-    url: '/images/diary/b67e1c04-658e-4f2e-b0da-245549099671_5712x4284.jpg',
-    alt: 'Collage imagen 5'
-  },
-  {
-    url: '/images/diary/5.jpg',
-    alt: 'Collage imagen 6'
-  },
-  {
-    url: '/images/diary/GU3s8OLWEAA56XP.jpg',
-    alt: 'Collage imagen 7'
-  },
-  {
-    url: '/images/diary/13.jpg',
-    alt: 'Collage imagen 8'
-  },
-  {
-    url: '/images/diary/12.jpg',
-    alt: 'Collage imagen 9'
-  },
-  {
-    url: '/images/diary/the-lighthouse-md-web.jpg',
-    alt: 'Collage imagen 10'
-  }
-];
+const diaryImages = diaryFilenames.map((filename, idx) => ({
+  url: `/images/diary/${filename}`,
+  alt: `Imagen del diario ${idx + 1}`
+}));
+
+// El collage usará las mismas imágenes que el diario
+const collageImages = diaryImages;
 ---
 
-<Layout title="Image Series" {isTransparent}>
+<Layout title="Photography" {isTransparent}>
   <div class="min-h-screen relative overflow-hidden">
-    <div class="video-container fixed top-0 left-0 w-full h-full">
+    <div class="video-container fixed top-0 left-0 w-full h-full" style="background: #111 url('/images/fondo-poster.jpg') center center / cover no-repeat;">
       <div class="video-overlay absolute inset-0 z-10 mix-blend-overlay opacity-30"></div>
       <div class="video-grain absolute inset-0 z-20 mix-blend-soft-light opacity-[0.15]"></div>
       <video 
@@ -84,7 +43,8 @@ const collageImages = [
         loop 
         muted 
         playsinline
-        preload="auto"
+        preload="metadata"
+        poster="/images/fondo-poster.jpg" 
       >
         <source src={fondoVideo} type="video/mp4" />
       </video>
@@ -92,13 +52,17 @@ const collageImages = [
 
     <div class="relative z-30">
       <!-- Contenedor del diario -->
-      <div class="container mx-auto">
-        <ImageDiary images={diaryImages} />
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <ImageDiary images={diaryImages} />
+        </div>
       </div>
 
       <!-- Contenedor del collage a ancho completo -->
-      <div class="w-screen mt-16">
-        <ImageCollage images={collageImages} />
+      <div class="w-full mt-16">
+        <div class="max-w-6xl mx-auto">
+          <ImageCollage images={collageImages} />
+        </div>
       </div>
     </div>
   </div>
@@ -238,4 +202,4 @@ const collageImages = [
       });
     }
   });
-</script> 
+</script>
